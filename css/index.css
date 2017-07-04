@@ -1,0 +1,36 @@
+* {
+    box-sizing: border-box;
+    -o-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;  /*取消有事件监听的元素被点击的时候会被高亮显示*/
+}
+html, body {
+    height: 100%;
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+    -webkit-user-select: none;   /*文本不能被选择*/
+    -webkit-tap-highlight-color: transparent;
+}
+body {
+    background-color: #000018;
+    font-family: 'å¾®è½¯é›…é»‘';
+}
+a {
+    text-decoration: none;
+}
+#container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+#guidePanel {
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6) url(../imgs/startbg.png) center 50% no-repeat;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
