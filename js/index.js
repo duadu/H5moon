@@ -11,6 +11,7 @@ $(function () {
     timmer: null,
     moonList: [],
     time: 0,
+    score: 0,
     im: new ImageMonitor(),
     eventType: {
       start: 'touchstart',
@@ -41,6 +42,15 @@ $(function () {
         _this.ship.controll();
         _this.run(ctx);
       });
+      body.on(gameMonitor.eventType.start, 'replay, .playagain', function () {
+        $('#resultPanel').hide();
+        var canvas = document.getElementsById('stage');
+        var ctx = canvas.getContext('2d');
+        _this.ship = new Ship(ctx);
+        _this.ship.controll();
+        _this.reset();
+        _this.run(ctx);
+      })
     },
     rollBg: function (ctx) {
       if (this.bgDistance >= this.bgHeight) {
@@ -69,7 +79,43 @@ $(function () {
         clearTimeout(_this.timmer);
       }, 0);
     },
+    getScore: function () {
+      var time = Math.floor(this.time / 60);
+      var score = this.score;
+      var user = 1;
+      if (score == 0) {
+        $('#scorecontent').html('真遗憾，您竟然<span class="lighttext">一个</span>月饼都没有抢到！');
+        $('.btn1').text('大侠请重新来过').removeClass('share').addClass('playagain');
+        $('#fenghao').removeClass('geili yinhen').addClass('yinhen');
+        return;
+      }
+      else if(score<10){
+        user = 2;
+      }
+      else if(score>10 && score<=20){
+        user = 10;
+      }
+      else if(score>20 && score<=40){
+        user = 40;
+      }
+      else if(score>40 && score<=60){
+        user = 80;
+      }
+      else if(score>60 && score<=80){
+        user = 92;
+      }
+      else if(score>80){
+        user = 99;
+      }
+      $('#fenghao').removeClass('geili yinhen').addClass('geili');
+      $('#scorecontent').html('您在<span id="stime" class="lighttext">2378</span>秒内抢到了<span id="sscore" class="lighttext">21341</span>个月饼<br>超过了<span id="suser" class="lighttext">31%</span>的用户！');
+      $('#stime').text(time);
+      $('#sscore').text(score);
+      $('#suser').text(user+'%');
+      $('.btn1').text('请小伙伴吃月饼').removeClass('playagain').addClass('share');
+    },
     run: function (ctx) {
+      $('.score-wrap').show();
       ctx.clearRect(0, 0, this.bgWidth, this.bgHeight);  //清空给定矩形内的指定像素
       this.rollBg(ctx);
       this.timmer = setTimeout(function () {
@@ -129,6 +175,7 @@ $(function () {
     this.speedUpTime = 300;
     this.width = this.height = 50;
     this.top = - this.height;
+    this.type = type;
     this.left = left;
     this.id = id;
     this.speed = 0.04 * Math.pow(1.2, Math.floor(gameMonitor.time / this.speedUpTime))
@@ -210,9 +257,18 @@ $(function () {
             if (moon.type == 0) {
               gameMonitor.stop();
               $('#gameoverPanel').show();
+              setTimeout(function () {
+                $('#gameoverPanel').hide();
+                $('#resultPanel').show();
+                gameMonitor.getScore();
+              }, 2000);
+            } else {
+              $('#score').text(++gameMonitor.score);
+              $('.heart').removeClass('hearthot').addClass('hearthot');
+              setTimeout(function () {
+                $('.heart').removeClass('hearthot');
+              }, 200);
             }
-          } else {
-            // $('#score').text(++gameMonitor.score);
           }
         }
       }
